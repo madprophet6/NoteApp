@@ -1,6 +1,6 @@
 export interface NoteType {
     id: string
     text: string
-    createdOn: Date
+    createdOn: string
     title: string
 }

@@ -21,7 +21,7 @@ export const NoteForm = (props: NoteFormProps) => {
             id: props.note ? props.note.id : now.toISOString(),
             text: noteInput,
             title: titleInput,
-            createdOn: props.note ? props.note.createdOn : now
+            createdOn: props.note ? props.note.createdOn : now.toISOString()
         }
         props.onSave(newNote)
     }

@@ -13,16 +13,10 @@ interface NoteListProps {
 export const NoteList = (props: NoteListProps) => {
   const [searchInput, setSearchInput] = useState('')
 
-  const formateDateToString = (date: Date) => {
-    const offset = date.getTimezoneOffset()
-    date = new Date(date.getTime() - (offset * 60 * 1000))
-    return date.toISOString().split('T')[0]
-  }
-
   const renderItem = ({ item, index }: { item: NoteType, index: number }) => (
     <ListItem
       title={`${item.title}`}
-      description={`Created ${formateDateToString(item.createdOn)} ${index + 1}`}
+      description={`Created ${(item.createdOn.split('T')[0])}`}
       onPress={() => { props.onRowPress(item) }}
       accessoryRight={() => (
         <Button
