@@ -1,30 +1,33 @@
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Input } from '@ui-kitten/components';
 import { Button, Icon, Layout, Spinner } from '@ui-kitten/components';
 import { NoteType } from '../types';
 
 interface NoteFormProps {
     onSave: (note: NoteType) => void
+    note?: NoteType
+    buttonText?: string
+    buttonIcon?: string
 }
 
 export const NoteForm = (props: NoteFormProps) => {
-    const [titleInput, setTitleInput] = useState<string>('')
-    const [noteInput, setNoteInput] = useState<string>('')
+    const [titleInput, setTitleInput] = useState<string>(props.note ? props.note.title : '')
+    const [noteInput, setNoteInput] = useState<string>(props.note ? props.note.text : '')
 
     const handleOnSave = () => {
         const now = new Date()
         const newNote: NoteType = {
-            id: now.toISOString(),
+            id: props.note ? props.note.id : now.toISOString(),
             text: noteInput,
             title: titleInput,
-            createdOn: now
+            createdOn: props.note ? props.note.createdOn : now
         }
         props.onSave(newNote)
     }
 
     return (
-        <>
+        <View style={styles.view}>
             <Input
                 style={styles.input}
                 size='medium'
@@ -45,19 +48,24 @@ export const NoteForm = (props: NoteFormProps) => {
                 style={styles.button} 
                 status='primary' 
                 accessoryLeft={
-                    <Icon name='save'/>
+                    <Icon name={ props.buttonIcon ? props.buttonIcon : 'save'}/>
                 }
                 onPress={handleOnSave}
             >
-                Save Note
+                { props.buttonText ? props.buttonText : 'Save Note'}
             </Button>
 
-        </>
+        </View>
     )
 }
 const styles = StyleSheet.create({
+    view: {
+        display: 'flex',
+        alignItems: 'center'
+    },
     input: {
         marginVertical: 2,
+        marginBottom: 25
     },
     container: {
         flexDirection: 'row',
@@ -65,6 +73,8 @@ const styles = StyleSheet.create({
     },
     button: {
         margin: 2,
+        marginTop: 25,
+        maxWidth: 200
     },
     indicator: {
         justifyContent: 'center',
