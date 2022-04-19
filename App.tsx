@@ -9,26 +9,27 @@ import { NoteList } from './components/NoteList';
 import { NoteView } from './components/NoteView';
 
 const HomeScreen = () => {
+  const [startup, setStartup] = useState<boolean>(true)
   const [notes, setNotes] = useState<NoteType[]>([])
   const [viewNoteID, setViewNoteID] = useState<string | null>(null)
 
   // save notes to storage
   useEffect(() => {
-    const jsonValue = JSON.stringify({ notes })
-    AsyncStorage.setItem('notes', jsonValue)
+    if (!startup) {
+      const jsonValue = JSON.stringify({ notes })
+      AsyncStorage.setItem('notes', jsonValue)
+      AsyncStorage.getItem('notes').then(value => console.log(value))
+    } else {
+      setStartup(false)
+    }
   }, [notes])
-
-  const saveNotes = () => {
-    const jsonValue = JSON.stringify({ notes })
-    AsyncStorage.setItem('notes', jsonValue)
-  }
 
   // load notes from storage
   useEffect(() => {
     AsyncStorage.getItem('notes').then(jsonValue => {
       if(jsonValue !== null) {
         const data = JSON.parse(jsonValue)
-        console.log(data)
+        // console.log(data)
         if (data.notes)
           setNotes(data.notes)
       }
@@ -49,8 +50,6 @@ const HomeScreen = () => {
 
     if (!doesNoteExist)
       setNotes([...notes, note])
-
-      saveNotes()
   }
 
   const getNoteByID = (searchNoteID: string | null): NoteType | null => {
